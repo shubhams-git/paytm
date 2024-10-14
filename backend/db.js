@@ -1,32 +1,43 @@
-const mongoose = require("mongoose")
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+dotenv.config();
+
+const mongoURI = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.PASSWORD}@${process.env.CLUSTER}.mongodb.net/${process.env.DATABASE_NAME}` 
+console.log(mongoURI)
+
+mongoose.connect(mongoURI).
+then(
+    ()=>{console.log("Successfully connected")}
+).catch(
+    (e)=>{console.log("error: "+e)}
+)
 
 const userSchema = new mongoose.Schema({
-    username: {
+    userName: {
         type: String,
         required: true,
-        unique: true,
-        trim:true,
-        lowercase:true,
-        minLength:3,
-        maxLength:30
+        trim: true,
+        minLength:5,
+        maxLength:20,
+        lowercase:true
     },
-    password: {
-        type: String,
+    password:{
+        type:String,
         required:true,
         minLength:6
     },
     firstName: {
         type: String,
         required:true,
-        trim: true,
-        maxLength:50
+        maxLength:20,
+        trim:true
     },
     lastName: {
         type: String,
         required:true,
-        trim: true,
-        maxLength:50
-    },
+        trim:true,
+        maxLength:20
+    }
 })
 
-export const model = new mongoose.model("User", userSchema);
+export const userModel = mongoose.model("User",userSchema);
