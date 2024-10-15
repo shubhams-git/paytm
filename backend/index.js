@@ -1,5 +1,5 @@
 import express from "express"
-import {router} from "./routes/index.js"
+import mainRouter from "./routes/index.js"
 import cors from "cors"
 import dotenv from "dotenv"
 
@@ -8,8 +8,7 @@ app.use(express.json())
 app.use(cors())
 dotenv.config()
 
-app.use("api/v1/user", router)
-
+app.use("/api/v1", mainRouter)
 app.listen(process.env.PORT, ()=>{
     console.log(`listening to port:${process.env.PORT}`)
 })

@@ -3,17 +3,16 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const mongoURI = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.PASSWORD}@${process.env.CLUSTER}.mongodb.net/${process.env.DATABASE_NAME}` 
-console.log(mongoURI)
 
 mongoose.connect(mongoURI).
 then(
-    ()=>{console.log("Successfully connected")}
+    ()=>{console.log("Successfully connected to the DB")}
 ).catch(
-    (e)=>{console.log("error: "+e)}
+    (e)=>{console.log("Error in DB connection: "+e)}
 )
 
 const userSchema = new mongoose.Schema({
-    userName: {
+    username: {
         type: String,
         required: true,
         trim: true,
@@ -39,5 +38,5 @@ const userSchema = new mongoose.Schema({
         maxLength:20
     }
 })
-
-export const userModel = mongoose.model("User",userSchema);
+const userModel = mongoose.model("users",userSchema);
+export default userModel;
