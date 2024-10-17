@@ -3,6 +3,7 @@ import zod from "zod"
 import userModel from "../db.js"
 import jwt from "jsonwebtoken"
 import JWT_SECRET from "../config.js"
+import authMiddleware from "../middleware.js"
 
 const userRouter = express.Router()
 export default userRouter
@@ -12,6 +13,12 @@ const signupSchema = zod.object({
     password: zod.string().min(4),
     firstName: zod.string().max(20),
     lastName:zod.string().max(20)
+})
+
+const updateBodySchema = zod.object({
+    password: zod.string().min(4).optional(),
+    lastName: zod.string().max(20).optional(),
+    firstName: zod.string().max(20).optional()
 })
 
 userRouter.post("/signup",async(req,res)=>{
@@ -62,7 +69,7 @@ userRouter.post("/signin",async(req,res)=>{
     if(findUser){
 
         const token = jwt.sign({
-            userid: findUser._id
+            userId: findUser._id
         },JWT_SECRET)
     
         return res.status(200).send(
@@ -72,6 +79,27 @@ userRouter.post("/signin",async(req,res)=>{
     }else{
         return res.status(411).send({
             message: "Error while logging in"
+        })
+    }
+})
+
+userRouter.put("/", authMiddleware, async (req,res)=>{
+
+    const {success} = updateBodySchema.safeParse(req.body)
+    if(!success){
+        return res.status(411).send({
+            message: "Error while updating information"
+        })
+    }
+
+    try{
+        const updatedUser = await userModel.findByIdAndUpdate(req.userId,req.body)
+        return res.send({
+            message: "Updated successfully"
+        })
+    }catch (e){
+        return res.status(411).send({
+            message: "Error while updating information"
         })
     }
 })
