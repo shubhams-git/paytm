@@ -1,6 +1,8 @@
 import express from "express"
 import zod from "zod"
 import userModel from "../db.js"
+import jwt from "jsonwebtoken"
+import JWT_SECRET from "../config.js"
 
 const userRouter = express.Router()
 export default userRouter
@@ -28,17 +30,22 @@ userRouter.post("/signup",async(req,res)=>{
         username: body.username
     })
     
-    if(user._id){
+    if(user){
         return res.status(411).send({
             message: "Email already taken / Incorrect inputs"
         })
     }
 
-    await userModel.create(body)
+    const newUser = await userModel.create(body)
+    const newUserId = newUser._id
+
+    const token = jwt.sign({
+        userId: newUserId
+    }, JWT_SECRET);
 
     return res.status(200).send({
         message: "User created successfully",
-        token: "jwt"
+        token: token
     })
 
    

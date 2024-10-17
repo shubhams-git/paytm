@@ -1,3 +1,3 @@
-module.export={
-    JWT_SECRET:"mySecret"
-}
+const JWT_SECRET="mySecret";
+
+export default JWT_SECRET
