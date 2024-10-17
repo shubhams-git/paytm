@@ -51,15 +51,27 @@ userRouter.post("/signup",async(req,res)=>{
    
 })
 
-userRouter.post("/signin",(req,res)=>{
+userRouter.post("/signin",async(req,res)=>{
 
-    res.statusCode(200).send(
-        {
-            token: "jwt"
-        });
+    const body = req.body
+    const findUser = await userModel.findOne({
+        username: body.username,
+        password: body.password
+    })
+
+    if(findUser){
+
+        const token = jwt.sign({
+            userid: findUser._id
+        },JWT_SECRET)
     
-    res.statusCode(411).send(
-        {
+        return res.status(200).send(
+            {
+                token: token
+            });
+    }else{
+        return res.status(411).send({
             message: "Error while logging in"
         })
+    }
 })
