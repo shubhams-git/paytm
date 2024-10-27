@@ -130,3 +130,4 @@ userRouter.get("/bulk",authMiddleware, async(req,res)=>{
         }))
     })
 })
+
