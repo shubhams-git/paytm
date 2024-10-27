@@ -1,6 +1,7 @@
 import express from "express"
 import zod from "zod"
-import userModel from "../db.js"
+import {userModel} from "../db.js"
+import { accountModel } from "../db.js"
 import jwt from "jsonwebtoken"
 import JWT_SECRET from "../config.js"
 import authMiddleware from "../middleware.js"
@@ -102,4 +103,30 @@ userRouter.put("/", authMiddleware, async (req,res)=>{
             message: "Error while updating information"
         })
     }
+})
+
+userRouter.get("/bulk",authMiddleware, async(req,res)=>{
+    const filter = req.query.filter || ''
+
+    const users= await userModel.find({
+        $or:[{
+            firstName:{
+                "$regex":filter
+            }
+        },
+        {
+            lastName:{
+                "$regex":filter
+            }
+        }]
+    })
+
+    return res.status(202).json({
+        user: users.map(user=>({
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            _id: user._id
+        }))
+    })
 })
