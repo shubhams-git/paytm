@@ -31,18 +31,21 @@ accountRouter.post("/transfer", authMiddleware, async (req, res) => {
         const toAccount = await accountModel.findOne({ userId: to }).session(session);
 
         if (!fromAccount || !toAccount) {
-            await session.abortTransaction(); // Abort within the transaction context
+            await session.abortTransaction();
             session.endSession();
-            return { status: 400, message: "Invalid Account" };
+            return res.status(400).send({
+                message: "Invalid Account" 
+            });
         }
 
         if (fromAccount.balance < amount) {
             await session.abortTransaction();
             session.endSession();
-            return { status: 400, message: "Insufficient Balance" };
+            return res.status(400).send({
+                message: "Insufficient Balance" 
+            });
         }
 
-        // Perform balance update operations within the transaction
         await accountModel.updateOne(
             { userId: fromAccount.userId },
             { $inc: { balance: -amount } },
@@ -55,84 +58,21 @@ accountRouter.post("/transfer", authMiddleware, async (req, res) => {
             { session }
         );
 
-        // Commit the transaction and end the session
         await session.commitTransaction();
         session.endSession();
 
-        return { status: 200, message: "Transfer successful" };
+        return res.status(200).send({
+            message: "Transfer successful" 
+        });
     } catch (error) {
-        // Abort only if transaction is still active
+
         if (session.inTransaction()) {
             await session.abortTransaction();
         }
         session.endSession();
-        return { status: 500, message: "Transfer failed", error: error.message };
+        return res.status(500).send({
+            message: "Transfer failed",
+            error: error.message 
+        });
     }
 });
-
-async function transfer(req) {
-    const { amount, to } = req.body;
-    const session = await mongoose.startSession();
-
-    try {
-        session.startTransaction();
-
-        const fromAccount = await accountModel.findOne({ userId: req.userId }).session(session);
-        const toAccount = await accountModel.findOne({ userId: to }).session(session);
-
-        if (!fromAccount || !toAccount) {
-            await session.abortTransaction(); // Abort within the transaction context
-            session.endSession();
-            return { status: 400, message: "Invalid Account" };
-        }
-
-        if (fromAccount.balance < amount) {
-            await session.abortTransaction();
-            session.endSession();
-            return { status: 400, message: "Insufficient Balance" };
-        }
-
-        // Perform balance update operations within the transaction
-        await accountModel.updateOne(
-            { userId: fromAccount.userId },
-            { $inc: { balance: -amount } },
-            { session }
-        );
-
-        await accountModel.updateOne(
-            { userId: toAccount.userId },
-            { $inc: { balance: amount } },
-            { session }
-        );
-
-        // Commit the transaction and end the session
-        await session.commitTransaction();
-        session.endSession();
-
-        return { status: 200, message: "Transfer successful" };
-    } catch (error) {
-        // Abort only if transaction is still active
-        if (session.inTransaction()) {
-            await session.abortTransaction();
-        }
-        session.endSession();
-        return { status: 500, message: "Transfer failed", error: error.message };
-    }
-}
-
-
-transfer({
-    userId:"671f7a816e1ad28baa031b2b",
-    body:{
-        to:"671f86dced22d20f2ccd1373",
-        amount: 1000
-    }
-})
-
-transfer({
-    userId:"671f7a816e1ad28baa031b2b",
-    body:{
-        to:"671f86dced22d20f2ccd1373",
-        amount: 1000
-    }
-})
