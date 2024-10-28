@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema({
 
 const accountSchema = new mongoose.Schema({
     userId: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "users",
         required: true
     },
@@ -51,5 +51,5 @@ const accountSchema = new mongoose.Schema({
         maxLength: 20
     }
 })
-export const accountModel = mongoose.model("accountModel", accountSchema)
+export const accountModel = mongoose.model("accounts", accountSchema)
 export const userModel = mongoose.model("users",userSchema);
