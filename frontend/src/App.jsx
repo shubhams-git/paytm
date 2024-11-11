@@ -7,6 +7,7 @@ import { Signin } from './pages/Signin'
 import { Signup } from './pages/Signup'
 import { Dashboard } from './pages/Dashboard'
 import { SendMoney } from './pages/SendMoney'
+import { AppBar } from './components/AppBar'
 
 function App() {
   const [count, setCount] = useState(0)

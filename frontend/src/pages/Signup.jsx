@@ -5,7 +5,8 @@ import { InputBox } from "../components/InputBox"
 import { SubHeading } from "../components/SubHeading"
 
 export const Signup = ()=>{
-    return <div className="flex flex-col w-1/5">
+    return <div className="bg-slate-300 h-screen flex justify-center items-center">
+        <div className="flex flex-col w-1/5 px-3 py-5 bg-white rounded-lg">
                 <Heading label={"Sign Up"}/>
                 <SubHeading label={"Enter your information to create an account"} />
                 <InputBox title={"First Name"} label={"John"}/>
@@ -15,4 +16,6 @@ export const Signup = ()=>{
                 <ButtonComponent label={"Sign up"} />
                 <BottomWarning label={"Already have an account?"} type={"Sign in"}/>
             </div>
+    </div>
 }
+

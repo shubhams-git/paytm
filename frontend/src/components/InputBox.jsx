@@ -3,8 +3,8 @@ export const InputBox = ({title, label})=>{
         <div className="font-bold text-base">
             {title}
         </div>
-        <div className="py-2 pl-3">
-            <input placeholder={label}></input>
+        <div className="py-2 px-3">
+            <input className="min-w-full" placeholder={label}></input>
         </div>
     </div>
 }
