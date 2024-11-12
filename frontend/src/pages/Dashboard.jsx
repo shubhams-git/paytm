@@ -5,9 +5,10 @@ export const Dashboard = ()=>{
     const amount = 5000
     const name = "Shubham"
     const shortName = "S"
-    return <div>
-        <AppBar name={name} shortName={shortName}/>
-        <Balance amount={amount} />
-        <Users />
-    </div>
+
+    return (<div>
+                <AppBar name={name} shortName={shortName}/>
+                <Balance amount={amount} />
+                <Users />
+            </div>)
 }
