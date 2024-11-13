@@ -110,29 +110,26 @@ userRouter.put("/", authMiddleware, async (req,res)=>{
     }
 })
 
-userRouter.get("/bulk",authMiddleware, async(req,res)=>{
-    const filter = req.query.filter || ''
+userRouter.get("/bulk", authMiddleware, async (req, res) => {
+    const filter = req.query.filter || '';
+    
+    const users = await userModel.find({
+        $or: [
+            { firstName: { "$regex": filter, "$options": "i" } }, // Case-insensitive search
+            { lastName: { "$regex": filter, "$options": "i" } }
+        ]
+    });
 
-    const users= await userModel.find({
-        $or:[{
-            firstName:{
-                "$regex":filter
-            }
-        },
-        {
-            lastName:{
-                "$regex":filter
-            }
-        }]
-    })
+    const filteredUsers = users.filter(user => user._id.toString() !== req.userId);
 
     return res.status(202).json({
-        user: users.map(user=>({
+        user: filteredUsers.map(user => ({
             username: user.username,
             firstName: user.firstName,
             lastName: user.lastName,
             _id: user._id
         }))
-    })
-})
+    });
+});
+
 

@@ -1,5 +1,5 @@
 import { BottomWarning } from "../components/BottomWarning"
-import { ButtonComponent } from "../components/ButtonComponent"
+import { Button } from "../components/Button"
 import { Heading } from "../components/Heading"
 import { InputBox } from "../components/InputBox"
 import { SubHeading } from "../components/SubHeading"
@@ -11,7 +11,7 @@ export const Signin = ()=>{
             <SubHeading label={"Enter your information"} />
             <InputBox title={"Email"} label={"shubham@gmail.com"}/>
             <InputBox title={"Password"} label={"123456"}/>
-            <ButtonComponent label={"Sign in"} />
+            <Button label={"Sign in"} />
             <BottomWarning label={"Create a new account"} type={"Sign up"}/>
         </div>
     </div>
