@@ -132,4 +132,27 @@ userRouter.get("/bulk", authMiddleware, async (req, res) => {
     });
 });
 
+userRouter.get("/details", authMiddleware, async(req,res)=>{
+    const {userId} = req
+    try{
+        const user = await userModel.findOne({
+            _id:userId
+        })
+    
+        const userAccount = await accountModel.findOne({
+          userId: userId
+        })
+    
+        return res.status(202).send({
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            balance: userAccount.balance
+        })
+    }catch (e){
+        console.log("Error: "+e)
+    }
+
+    
+})
 

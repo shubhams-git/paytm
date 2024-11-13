@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { SendMoney } from "../components/SendMoney"
 import axios from "axios";
 export const Send = ()=>{
@@ -6,6 +6,7 @@ export const Send = ()=>{
     const userId = searchParams.get("userId")
     const firstName= searchParams.get("firstName")
     const shortName = searchParams.get("shortName")
+    const navigate = useNavigate();
 
     return <div>
         <SendMoney id={userId} shortName={shortName} firstName={firstName} onTransferClick={async(amount)=>{
@@ -20,6 +21,7 @@ export const Send = ()=>{
                     }
                 }
             );
+            navigate("/dashboard")
         }}/>
     </div>
 }

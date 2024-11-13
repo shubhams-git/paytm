@@ -4,7 +4,7 @@ export const Balance = ({amount})=>{
                     Your Balance
                 </div>
                 <div className="font-semibold px-3">
-                    ${amount}
+                    {Number(amount).toFixed(2)}
                 </div>
             </div>
 }

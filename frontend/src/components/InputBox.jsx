@@ -3,8 +3,8 @@ export const InputBox = ({title, label, onChange})=>{
         <div className="font-bold text-base">
             {title}
         </div>
-        <div className="py-2 px-3">
-            <input onChange={onChange} className="min-w-full" placeholder={label}></input>
+        <div className="py-2">
+            <input onChange={onChange} className="min-w-full p-1" placeholder={label}></input>
         </div>
     </div>
 }
